@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { Flight, SearchParams } from "@/types";
 
-type Source = "skyscanner" | "unavailable" | "error";
+type Source = "aviasales" | "unavailable" | "error";
 
 interface FlightSearchResult {
   flights: Flight[];
@@ -25,9 +25,7 @@ export function useFlightSearch() {
 
     try {
       const qs = new URLSearchParams({
-        from: params.from,
-        fromSkyId: params.fromSkyId,
-        fromEntityId: params.fromEntityId,
+        from: params.fromCode || params.from,
         departureDate: params.departureDate,
         returnDate: params.returnDate,
         ...(params.currency ? { currency: params.currency } : {}),

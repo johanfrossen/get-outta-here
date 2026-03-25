@@ -40,8 +40,6 @@ export function useCurrency() {
 export interface RecentSearch {
   from: string;
   fromCode: string;
-  fromSkyId: string;
-  fromEntityId: string;
   departureDate: string;
   returnDate: string;
   timestamp: number;

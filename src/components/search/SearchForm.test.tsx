@@ -57,8 +57,6 @@ describe("SearchForm", () => {
     expect(onSearch).toHaveBeenCalledWith({
       from: "Stockholm",
       fromCode: "",
-      fromSkyId: "",
-      fromEntityId: "",
       departureDate: "2026-06-15",
       returnDate: "2026-06-22",
     });

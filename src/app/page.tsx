@@ -45,9 +45,9 @@ export default function Home() {
           isFavorite={isFavorite}
           onToggleFavorite={toggleFavorite}
         />
-        {source === "skyscanner" && flights.length > 0 && !isLoading && (
+        {source === "aviasales" && flights.length > 0 && !isLoading && (
           <p className="text-text-muted text-[10px] font-light italic text-center mt-[16px]">
-            Live flight data via Skyscanner
+            Live flight data via Aviasales
           </p>
         )}
       </div>

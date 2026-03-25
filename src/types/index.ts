@@ -28,8 +28,6 @@ export interface FlightPrice {
 export interface SearchParams {
   from: string;
   fromCode: string;
-  fromSkyId: string;
-  fromEntityId: string;
   departureDate: string;
   returnDate: string;
   currency?: string;

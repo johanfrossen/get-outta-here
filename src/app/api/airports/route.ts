@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchAirports } from "@/lib/skyscrapper";
+import { searchAirports } from "@/lib/travelpayouts";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -7,10 +7,6 @@ export async function GET(request: NextRequest) {
 
   if (!term || term.length < 2) {
     return NextResponse.json({ locations: [] });
-  }
-
-  if (!process.env.RAPIDAPI_KEY) {
-    return NextResponse.json({ locations: [], source: "no-api-key" });
   }
 
   try {

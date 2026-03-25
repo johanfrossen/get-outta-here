@@ -23,8 +23,6 @@ export function RecentSearches({ searches, onSelect }: RecentSearchesProps) {
             onSelect({
               from: s.from,
               fromCode: s.fromCode,
-              fromSkyId: s.fromSkyId,
-              fromEntityId: s.fromEntityId,
               departureDate: s.departureDate,
               returnDate: s.returnDate,
             })
