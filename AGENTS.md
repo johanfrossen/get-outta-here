@@ -2,6 +2,22 @@
 
 A flight search web application that helps users find Mediterranean escape flights. Built with Next.js, TypeScript, and Tailwind CSS. Deployed on Vercel.
 
+## Session Start -- Read This First
+
+When starting a new session on this project:
+1. Read this entire `AGENTS.md` to understand the project state.
+2. Check `.factory/MISSION.md` for the mission plan, milestone details, and the **Mission Log** at the bottom to see what's been completed.
+3. After completing any significant work, **update this file** with new components, commands, APIs, decisions, and current status.
+4. After completing a milestone, **append a Mission Log entry** to `.factory/MISSION.md`.
+
+## Current Status
+
+- **Phase**: Pre-build (mission planning complete, project not yet initialized with Next.js)
+- **Milestones completed**: None yet
+- **Next step**: Run `/missions` and reference `.factory/MISSION.md` to begin Milestone 1
+- **Repository**: https://github.com/johanfrossen/get-outta-here
+- **What exists**: AGENTS.md, .factory/MISSION.md, .factory/skills (vibe-coding, brainstorm, frontend-ui-integration, product-management)
+
 ## Core Commands
 
 - Install dependencies: `npm install`
@@ -104,3 +120,26 @@ When implementing UI, always check for Figma design references first. Use the Fi
 - Mobile-friendly date inputs
 - Color contrast meets WCAG AA
 - Screen reader friendly flight card content
+
+## Architecture Decisions
+
+_Record non-obvious technical choices here as the project evolves._
+
+| Decision | Choice | Rationale | Date |
+|---|---|---|---|
+| Framework | Next.js 15 App Router | Vercel-native deploy, API routes for key protection, SSR | 2026-03-25 |
+| Styling | Tailwind CSS v4 | 8pt grid maps directly, rapid iteration | 2026-03-25 |
+| Animation | Framer Motion + GSAP | FM for React integration, GSAP for complex timelines | 2026-03-25 |
+| Flight API | Amadeus Self-Service | Best free tier, real data, comprehensive endpoints | 2026-03-25 |
+| Desktop grid | 4 columns (not 6) | Figma design shows 4 cards per row at 1440px | 2026-03-25 |
+| Theme | Dark mode only | Figma design is black bg with salmon accents | 2026-03-25 |
+| Currency default | SEK | Figma mockups show SEK pricing | 2026-03-25 |
+| Production font | JetBrains Mono Italic (or IBM Plex Mono) | Replace Figma's unlicensed ABC Social Mono trial | 2026-03-25 |
+
+## Documentation Rules
+
+- **This file (AGENTS.md)** must be updated after every milestone or significant change.
+- **`.factory/MISSION.md`** must have a Mission Log entry appended after each milestone.
+- **Components**: Add JSDoc comments explaining purpose, props, and usage.
+- **API routes**: Document request/response shapes and error handling in code and here.
+- **New patterns**: If you introduce a new hook, utility, or pattern, add it to the relevant section above.

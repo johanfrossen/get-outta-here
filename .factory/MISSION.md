@@ -236,6 +236,61 @@ public/             -> Static assets, fonts
 - **frontend-ui-integration**: UI features against Amadeus API, Milestones 4-5.
 - **product-management**: Feature scoping if needed.
 
+## Documentation Requirements (CRITICAL)
+
+Documentation is a first-class deliverable. Every milestone must produce documentation alongside code.
+
+### What to document
+
+1. **AGENTS.md** (root): Keep this file continuously updated as the single source of truth for any new Droid session. After each milestone, update it with:
+   - Current project status (which milestones are complete, what's in progress)
+   - Any new commands, scripts, or workflows added
+   - New components and their locations
+   - API integrations and how they work
+   - Environment variables needed and how to set them up
+   - Known issues or gotchas discovered during implementation
+
+2. **Component documentation**: Each major component should have a brief JSDoc comment explaining its purpose, props, and usage.
+
+3. **API documentation**: Document all API routes, request/response shapes, and error handling in code comments and in AGENTS.md.
+
+4. **Architecture decisions**: When making non-obvious technical choices (e.g., why a specific animation library for a specific effect, why a certain caching strategy), add a brief note in AGENTS.md under a "Decisions" section.
+
+### Self-updating mission log
+
+After completing each milestone, append a **Mission Log** entry at the bottom of this file (`MISSION.md`) with:
+- Date completed
+- What was built (files created/modified)
+- What works
+- What changed from the original plan (if anything)
+- Any blockers or issues encountered
+- What the next milestone should focus on
+
+Format:
+```
+## Mission Log
+
+### Milestone 1 -- [date]
+**Status**: Complete
+**What was built**: [summary]
+**Files**: [key files created]
+**Changes from plan**: [any deviations]
+**Issues**: [any blockers found]
+**Next**: [what M2 should prioritize]
+```
+
+### AGENTS.md as session bootstrap
+
+The goal is that any new Droid session opening this project can read AGENTS.md and immediately understand:
+- What the project is and what it does
+- The current state (what's done, what's next)
+- How to run, build, test, and lint
+- The tech stack and key patterns
+- Where everything lives in the codebase
+- What APIs are integrated and how they work
+
+This means AGENTS.md must be a **living document** that grows with the project, not a static initial spec.
+
 ## Constraints
 
 - Never commit API keys or secrets. Use `.env.local`.
@@ -245,6 +300,8 @@ public/             -> Static assets, fonts
 - 8-point spacing: no arbitrary pixel values.
 - Do NOT set up Vercel deployment.
 - Push all code to `johanfrossen/get-outta-here` on GitHub.
+- **Always update AGENTS.md** after completing any milestone or significant change.
+- **Always append to Mission Log** in this file after each milestone.
 
 ## Repository
 
@@ -263,3 +320,11 @@ public/             -> Static assets, fonts
 8. Visual match to Figma designs (dark theme, salmon accents, monospace italic).
 9. Lighthouse 90+ performance and accessibility.
 10. Code pushed to GitHub.
+11. **AGENTS.md is fully up-to-date** with current project state, commands, components, APIs, and architecture.
+12. **Mission Log below is complete** with entries for each finished milestone.
+
+---
+
+## Mission Log
+
+_Entries will be appended here after each milestone is completed._
