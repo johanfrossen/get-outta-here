@@ -12,11 +12,11 @@ When starting a new session on this project:
 
 ## Current Status
 
-- **Phase**: Pre-build (mission planning complete, project not yet initialized with Next.js)
-- **Milestones completed**: None yet
-- **Next step**: Run `/missions` and reference `.factory/MISSION.md` to begin Milestone 1
+- **Phase**: Milestone 1 complete, ready for Milestone 2
+- **Milestones completed**: M1 (Project Foundation & Design System)
+- **Next step**: Milestone 2 -- Core Search UI & Flight Cards
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: AGENTS.md, .factory/MISSION.md, .factory/skills (vibe-coding, brainstorm, frontend-ui-integration, product-management)
+- **What exists**: Full Next.js 15 project with design system, base components (DataRow, Button, Input, Card), Figma design tokens in Tailwind, JetBrains Mono Italic font, Vitest + RTL test suite (9 passing tests)
 
 ## Core Commands
 
@@ -24,9 +24,12 @@ When starting a new session on this project:
 - Dev server: `npm run dev`
 - Build: `npm run build`
 - Lint: `npm run lint`
-- Type check: `npx tsc --noEmit`
+- Type check: `npm run typecheck`
 - Test: `npm test`
-- Format: `npx prettier --write .`
+- Test (watch): `npm run test:watch`
+- Format: `npm run format`
+
+**Note**: npm scripts use direct `node node_modules/...` paths instead of `.bin` symlinks because the project directory path contains special characters that break symlinks.
 
 ## Project Layout
 
@@ -135,6 +138,7 @@ _Record non-obvious technical choices here as the project evolves._
 | Theme | Dark mode only | Figma design is black bg with salmon accents | 2026-03-25 |
 | Currency default | SEK | Figma mockups show SEK pricing | 2026-03-25 |
 | Production font | JetBrains Mono Italic (or IBM Plex Mono) | Replace Figma's unlicensed ABC Social Mono trial | 2026-03-25 |
+| npm scripts | Direct node_modules paths | Directory path has special chars breaking .bin symlinks | 2026-03-25 |
 
 ## Documentation Rules
 

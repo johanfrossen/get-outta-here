@@ -327,4 +327,24 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 
 ## Mission Log
 
-_Entries will be appended here after each milestone is completed._
+### Milestone 1 -- 2026-03-25
+**Status**: Complete
+**What was built**: Full Next.js 15 project foundation with Figma-matched design system. Tailwind CSS v4 theme with exact design tokens (colors, 8pt spacing, typography). JetBrains Mono Italic as production font. Four base UI components with tests.
+**Files**:
+- `src/app/layout.tsx` -- Root layout with JetBrains Mono font, dark bg
+- `src/app/globals.css` -- Tailwind theme with all Figma design tokens
+- `src/app/page.tsx` -- Demo page showing design system in action
+- `src/components/ui/DataRow.tsx` -- Two-column row (white label, salmon value, gray borders)
+- `src/components/ui/Button.tsx` -- Salmon CTA button (primary + outline variants)
+- `src/components/ui/Input.tsx` -- Search input (responsive: 32px desktop, 48px mobile)
+- `src/components/ui/Card.tsx` -- Dark card container (#222 bg, 16px padding, 8px radius)
+- `src/components/ui/index.ts` -- Barrel export
+- `src/types/index.ts` -- Flight, FlightLeg, FlightPrice, SearchParams interfaces
+- `vitest.config.ts` -- Vitest setup with jsdom and path aliases
+- `src/test/setup.ts` -- Testing Library jest-dom matchers
+- `.env.local.example` -- Amadeus API key template
+- `.prettierrc` -- Code formatting config
+- 4 test files (9 tests total, all passing)
+**Changes from plan**: npm scripts use direct `node node_modules/...` paths instead of `.bin` symlinks because the project directory path contains special characters (spaces, accented chars) that break npm's bin symlinks. All scripts still work correctly via `npm run <script>`.
+**Issues**: Directory path with special characters breaks node_modules/.bin symlinks. Workaround in place.
+**Next**: M2 should build SearchForm (with form validation), FlightCard, ResultsGrid, SkeletonCard, EmptyState, and mock data for 18+ Mediterranean destinations.
