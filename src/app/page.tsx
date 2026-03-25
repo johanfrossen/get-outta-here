@@ -1,28 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { SearchForm } from "@/components/search";
 import { ResultsGrid } from "@/components/flights";
 import { HeroText } from "@/components/animations";
-import { searchMockFlights } from "@/lib/mockData";
-import { Flight, SearchParams } from "@/types";
+import { useFlightSearch } from "@/hooks/useFlightSearch";
 
 export default function Home() {
-  const [flights, setFlights] = useState<Flight[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-
-  const handleSearch = useCallback((params: SearchParams) => {
-    setIsLoading(true);
-    setHasSearched(true);
-
-    const delay = 600 + Math.random() * 300;
-    setTimeout(() => {
-      const results = searchMockFlights(params.from);
-      setFlights(results);
-      setIsLoading(false);
-    }, delay);
-  }, []);
+  const { flights, isLoading, hasSearched, source, search } =
+    useFlightSearch();
 
   return (
     <main className="min-h-screen bg-background px-[16px] pt-[48px] xl:px-[24px]">
@@ -31,7 +16,7 @@ export default function Home() {
         className="text-accent text-[27px] xl:text-[41px] font-extralight italic text-left xl:text-center mb-[48px]"
       />
 
-      <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+      <SearchForm onSearch={search} isLoading={isLoading} />
 
       <div className="mt-[72px]">
         <ResultsGrid
@@ -39,6 +24,13 @@ export default function Home() {
           isLoading={isLoading}
           hasSearched={hasSearched}
         />
+        {source && hasSearched && !isLoading && (
+          <p className="text-text-muted text-[10px] font-light italic text-center mt-[16px]">
+            {source === "kiwi"
+              ? "Live flight data from Kiwi.com"
+              : "Showing sample flight data"}
+          </p>
+        )}
       </div>
     </main>
   );

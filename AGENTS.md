@@ -12,11 +12,11 @@ When starting a new session on this project:
 
 ## Current Status
 
-- **Phase**: Milestone 3 complete, ready for Milestone 4
-- **Milestones completed**: M1 (Foundation), M2 (Search UI & Cards), M3 (Animations & Motion)
-- **Next step**: Milestone 4 -- Amadeus Flight API Integration
+- **Phase**: Milestone 4 complete, ready for Milestone 5
+- **Milestones completed**: M1 (Foundation), M2 (Search UI & Cards), M3 (Animations), M4 (API Integration)
+- **Next step**: Milestone 5 -- Additional Features & Polish
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: Full animated search-to-results flow. Hero text character reveal, staggered card entrance, departure board flip rows, price counter ticker, dark shimmer skeletons, hover glow cards, search button pulse, input focus glow. All with prefers-reduced-motion fallbacks. 25 passing tests.
+- **What exists**: Full app with Kiwi.com Tequila API integration (free tier), airport autocomplete, API routes proxying to Kiwi with automatic mock data fallback. 25 passing tests.
 
 ## Core Commands
 
@@ -63,9 +63,10 @@ When starting a new session on this project:
 
 ## Flight APIs
 
-- Primary: Amadeus Self-Service API (flight offers search, airport lookup)
-- Fallback: Mock data with realistic Mediterranean flight results
-- API keys stored in `.env.local`, never committed
+- **Primary**: Kiwi.com Tequila API (flight search, airport autocomplete). Free tier. API key in `KIWI_API_KEY` env var.
+- **Fallback**: Mock data with 18 realistic Mediterranean destinations. Used automatically when no API key is set or API fails.
+- **Why not Amadeus**: Amadeus self-service portal is being decommissioned (July 2026), new signups are broken.
+- API keys stored in `.env.local`, never committed. See `.env.local.example`.
 
 ## Design System (from Figma)
 
@@ -113,6 +114,13 @@ When starting a new session on this project:
 - `FlipRow` (`components/animations/FlipRow.tsx`): Airport split-flap display effect for data rows
 - `PriceCounter` (`components/animations/PriceCounter.tsx`): RAF-based count-up ticker from 0 to value
 
+### API Routes & Hooks
+- `app/api/flights/route.ts`: GET endpoint. Params: from, fromCode, departureDate, returnDate, currency. Tries Kiwi API first, falls back to mock data.
+- `app/api/airports/route.ts`: GET endpoint. Params: term. Returns airport suggestions from Kiwi locations API.
+- `hooks/useFlightSearch.ts`: Client-side hook wrapping the /api/flights endpoint.
+- `hooks/useAirportSearch.ts`: Debounced (300ms) airport autocomplete hook wrapping /api/airports.
+- `lib/kiwi.ts`: Server-side Kiwi.com Tequila API client. Searches 16 Mediterranean IATA codes, maps responses to Flight model.
+
 ## Figma Integration
 
 When implementing UI, always check for Figma design references first. Use the Figma MCP tools available in the Droid to:
@@ -146,6 +154,7 @@ _Record non-obvious technical choices here as the project evolves._
 | Currency default | SEK | Figma mockups show SEK pricing | 2026-03-25 |
 | Production font | JetBrains Mono Italic (or IBM Plex Mono) | Replace Figma's unlicensed ABC Social Mono trial | 2026-03-25 |
 | npm scripts | Direct node_modules paths | Directory path has special chars breaking .bin symlinks | 2026-03-25 |
+| Flight API | Kiwi.com Tequila (not Amadeus) | Amadeus self-service portal decommissioned; Kiwi has free tier | 2026-03-25 |
 
 ## Documentation Rules
 

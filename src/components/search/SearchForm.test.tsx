@@ -2,6 +2,16 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SearchForm } from "./SearchForm";
 
+// Mock the airport search hook
+vi.mock("@/hooks/useAirportSearch", () => ({
+  useAirportSearch: () => ({
+    results: [],
+    isLoading: false,
+    search: vi.fn(),
+    clear: vi.fn(),
+  }),
+}));
+
 describe("SearchForm", () => {
   it("renders all input fields", () => {
     render(<SearchForm onSearch={vi.fn()} isLoading={false} />);

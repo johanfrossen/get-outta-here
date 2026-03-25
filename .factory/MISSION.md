@@ -389,3 +389,19 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: Skipped tagline rotation (optional per spec). Used useSyncExternalStore instead of useState+useEffect for reduced motion (cleaner, lint-compliant). PriceCounter uses direct DOM manipulation via ref instead of React state to avoid lint issues with setState in effects. Departure board flip uses Framer Motion instead of GSAP for consistency.
 **Issues**: None.
 **Next**: M4 should integrate Amadeus API -- API route, OAuth2 token management, airport autocomplete, flight search with multiple Mediterranean IATA codes, response mapping, error handling with mock fallback, React Query caching.
+
+### Milestone 4 -- 2026-03-25
+**Status**: Complete
+**What was built**: Full Kiwi.com Tequila API integration replacing Amadeus (which is being decommissioned). API routes for flight search and airport autocomplete. Debounced airport autocomplete dropdown in SearchForm. Automatic mock data fallback when no API key is set or API fails.
+**Files**:
+- `src/lib/kiwi.ts` -- Kiwi.com Tequila API client: flight search (16 Mediterranean IATA codes), airport/location search, response mapping to Flight model, date format conversion
+- `src/app/api/flights/route.ts` -- GET endpoint proxying to Kiwi API with mock fallback
+- `src/app/api/airports/route.ts` -- GET endpoint for airport autocomplete via Kiwi locations API
+- `src/hooks/useFlightSearch.ts` -- Client hook wrapping /api/flights endpoint
+- `src/hooks/useAirportSearch.ts` -- Debounced (300ms) airport autocomplete hook
+- `src/components/search/SearchForm.tsx` -- Added airport autocomplete dropdown, fromCode tracking
+- `src/app/page.tsx` -- Wired useFlightSearch hook, shows data source indicator
+- `.env.local.example` -- Updated for KIWI_API_KEY
+**Changes from plan**: Switched from Amadeus to Kiwi.com Tequila API because Amadeus self-service portal is being decommissioned July 2026 and new signups are broken. Kiwi has a free tier and simpler auth (single API key header vs OAuth2). Used custom hooks instead of React Query for simplicity -- can upgrade to React Query later if caching needs grow.
+**Issues**: Amadeus self-service signup is dead. Kiwi.com Tequila is the replacement.
+**Next**: M5 should add currency selector, recent searches, favorites, "Surprise me" button, weather preview, passenger count, responsive polish, accessibility audit, performance optimization, SEO meta tags.
