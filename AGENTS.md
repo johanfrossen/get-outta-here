@@ -12,11 +12,11 @@ When starting a new session on this project:
 
 ## Current Status
 
-- **Phase**: Milestone 1 complete, ready for Milestone 2
-- **Milestones completed**: M1 (Project Foundation & Design System)
-- **Next step**: Milestone 2 -- Core Search UI & Flight Cards
+- **Phase**: Milestone 2 complete, ready for Milestone 3
+- **Milestones completed**: M1 (Foundation & Design System), M2 (Core Search UI & Flight Cards)
+- **Next step**: Milestone 3 -- Animations & Motion
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: Full Next.js 15 project with design system, base components (DataRow, Button, Input, Card), Figma design tokens in Tailwind, JetBrains Mono Italic font, Vitest + RTL test suite (9 passing tests)
+- **What exists**: Full search-to-results flow with SearchForm (desktop horizontal + mobile stacked), FlightCard (responsive desktop/mobile), ResultsGrid (4-col grid), SkeletonCard, EmptyState, 18 Mediterranean destinations mock data, form validation. 25 passing tests.
 
 ## Core Commands
 
@@ -98,13 +98,16 @@ When starting a new session on this project:
 
 ## Key Components
 
-- `Header`: Brand name "Get Outta Here" + tagline
-- `SearchForm`: Departure city, departure date, return date inputs
-- `ResultsGrid`: Responsive grid of flight cards (4 cols xl, 1 col mobile)
-- `FlightCard`: Destination, description, outbound flight details, return flight details, prices (Basic + With luggage in SEK), "Book" CTA
-- `DataRow`: Reusable two-column row (white label, salmon value, gray border top/bottom)
-- `SkeletonCard`: Loading placeholder with animation
-- `EmptyState`: Friendly message before search
+- `Header` (in page.tsx): "GET OUTTA HERE" brand title, 41px desktop centered, 27px mobile left-aligned
+- `SearchForm` (`components/search/SearchForm.tsx`): Desktop: 4 inputs horizontal + search button. Mobile: stacked vertical with different labels. Form validation (required fields, return >= departure).
+- `ResultsGrid` (`components/flights/ResultsGrid.tsx`): 4-col xl grid, 1-col mobile. Handles loading/empty/no-results states.
+- `FlightCard` (`components/flights/FlightCard.tsx`): Desktop shows "Departure from" row. Mobile shows From/To rows. Sections: header, outbound flight, return flight, price, Book CTA.
+- `DataRow` (`components/ui/DataRow.tsx`): Two-column row (white label, salmon value, 0.5px gray border top/bottom, 40px height)
+- `Button` (`components/ui/Button.tsx`): Primary (salmon bg, black text) and outline variants, 48px height
+- `Input` (`components/ui/Input.tsx`): Responsive input (32px desktop, 48px mobile), salmon border
+- `Card` (`components/ui/Card.tsx`): Dark gray bg (#222), 16px padding, 8px radius
+- `SkeletonCard` (`components/flights/SkeletonCard.tsx`): Pulse-animated dark placeholders matching card structure
+- `EmptyState` (`components/flights/EmptyState.tsx`): Pre-search message in salmon
 
 ## Figma Integration
 

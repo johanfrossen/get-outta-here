@@ -348,3 +348,21 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: npm scripts use direct `node node_modules/...` paths instead of `.bin` symlinks because the project directory path contains special characters (spaces, accented chars) that break npm's bin symlinks. All scripts still work correctly via `npm run <script>`.
 **Issues**: Directory path with special characters breaks node_modules/.bin symlinks. Workaround in place.
 **Next**: M2 should build SearchForm (with form validation), FlightCard, ResultsGrid, SkeletonCard, EmptyState, and mock data for 18+ Mediterranean destinations.
+
+### Milestone 2 -- 2026-03-25
+**Status**: Complete
+**What was built**: Full search-to-results flow. SearchForm with desktop horizontal layout (4 inputs + search button, 225px each) and mobile stacked layout (different labels per Figma). FlightCard with desktop variant (Departure from row) and mobile variant (From/To rows). ResultsGrid with 4-column desktop grid and 1-column mobile. SkeletonCard with pulse animation. EmptyState pre-search message. 18 Mediterranean destinations with realistic mock data (SEK prices, flight times, airline names).
+**Files**:
+- `src/components/search/SearchForm.tsx` -- Desktop horizontal + mobile stacked form with validation
+- `src/components/search/index.ts` -- Barrel export
+- `src/components/flights/FlightCard.tsx` -- Responsive flight card (desktop/mobile variants)
+- `src/components/flights/ResultsGrid.tsx` -- Grid with loading/empty/no-results states
+- `src/components/flights/SkeletonCard.tsx` -- Dark pulse-animated loading placeholder
+- `src/components/flights/EmptyState.tsx` -- Pre-search message
+- `src/components/flights/index.ts` -- Barrel export
+- `src/lib/mockData.ts` -- 18 destinations: Barcelona, Nice, Rome, Athens, Valletta, Dubrovnik, Split, Palma de Mallorca, Naples, Marseille, Venice, Santorini, Lisbon, Malaga, Sardinia, Mykonos, Hvar, Kotor
+- `src/app/page.tsx` -- Main page wiring SearchForm + ResultsGrid with search state
+- 4 new test files (16 new tests, 25 total passing)
+**Changes from plan**: Search button added inline with desktop form (not in original Figma but needed for UX). Mobile search button full-width below form. Form validation inline with role="alert" for accessibility.
+**Issues**: None.
+**Next**: M3 should add animations -- hero text reveal, card entrance stagger, departure board flip, skeleton shimmer, hover card lift, search button pulse, price counter, input focus animation. All with prefers-reduced-motion support.
