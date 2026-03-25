@@ -18,6 +18,16 @@ interface FormErrors {
 const INPUT_FOCUS =
   "focus:shadow-[0_0_10px_rgba(255,149,149,0.3)] motion-reduce:focus:shadow-none";
 
+function parseDate(input: string): string | null {
+  const trimmed = input.trim();
+  const match = trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (match) {
+    const [, y, m, d] = match;
+    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  }
+  return null;
+}
+
 export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   const [from, setFrom] = useState("");
   const [fromCode, setFromCode] = useState("");
@@ -28,23 +38,39 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { results: airports, search: searchAirports, clear: clearAirports } = useAirportSearch();
+  const {
+    results: airports,
+    search: searchAirports,
+    clear: clearAirports,
+  } = useAirportSearch();
 
-  const isFormValid = useMemo(
-    () =>
+  const isFormValid = useMemo(() => {
+    const dep = parseDate(departureDate);
+    const ret = parseDate(returnDate);
+    return (
       from.trim().length > 0 &&
-      departureDate.length > 0 &&
-      returnDate.length > 0 &&
-      returnDate >= departureDate,
-    [from, departureDate, returnDate],
-  );
+      dep !== null &&
+      ret !== null &&
+      ret >= dep
+    );
+  }, [from, departureDate, returnDate]);
 
   function validate(): FormErrors {
     const newErrors: FormErrors = {};
     if (!from.trim()) newErrors.from = "Departure city is required";
-    if (!departureDate) newErrors.departureDate = "Departure date is required";
-    if (!returnDate) newErrors.returnDate = "Return date is required";
-    if (departureDate && returnDate && returnDate < departureDate) {
+    if (!departureDate.trim()) {
+      newErrors.departureDate = "Departure date is required";
+    } else if (!parseDate(departureDate)) {
+      newErrors.departureDate = "Use format YYYY-MM-DD";
+    }
+    if (!returnDate.trim()) {
+      newErrors.returnDate = "Return date is required";
+    } else if (!parseDate(returnDate)) {
+      newErrors.returnDate = "Use format YYYY-MM-DD";
+    }
+    const dep = parseDate(departureDate);
+    const ret = parseDate(returnDate);
+    if (dep && ret && ret < dep) {
       newErrors.returnDate = "Return date must be after departure";
     }
     return newErrors;
@@ -61,8 +87,8 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
       fromCode,
       fromSkyId,
       fromEntityId,
-      departureDate,
-      returnDate,
+      departureDate: parseDate(departureDate)!,
+      returnDate: parseDate(returnDate)!,
     });
   }
 
@@ -84,7 +110,7 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
     clearAirports();
   }
 
-  const fromInputClass = `bg-transparent border border-accent rounded-card text-accent font-light italic px-[8px] placeholder:text-accent/60 focus:outline-none focus:ring-1 focus:ring-accent transition-shadow ${INPUT_FOCUS}`;
+  const inputBase = `bg-transparent border border-accent rounded-card text-accent font-light italic placeholder:text-accent/60 focus:outline-none focus:ring-1 focus:ring-accent transition-shadow ${INPUT_FOCUS}`;
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -101,7 +127,7 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               aria-label="Departure city"
               autoComplete="off"
-              className={`w-[225px] h-[32px] text-[12px] ${fromInputClass}`}
+              className={`w-[225px] h-[32px] text-[12px] px-[8px] ${inputBase}`}
             />
             {showDropdown && airports.length > 0 && (
               <AirportDropdown
@@ -125,21 +151,23 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
 
         <DesktopField label="Leaving date" error={errors.departureDate}>
           <input
-            type="date"
+            type="text"
+            placeholder="YYYY-MM-DD"
             value={departureDate}
             onChange={(e) => setDepartureDate(e.target.value)}
             aria-label="Departure date"
-            className={`w-[225px] h-[32px] text-[12px] ${fromInputClass}`}
+            className={`w-[225px] h-[32px] text-[12px] px-[8px] ${inputBase}`}
           />
         </DesktopField>
 
         <DesktopField label="Return date" error={errors.returnDate}>
           <input
-            type="date"
+            type="text"
+            placeholder="YYYY-MM-DD"
             value={returnDate}
             onChange={(e) => setReturnDate(e.target.value)}
             aria-label="Return date"
-            className={`w-[225px] h-[32px] text-[12px] ${fromInputClass}`}
+            className={`w-[225px] h-[32px] text-[12px] px-[8px] ${inputBase}`}
           />
         </DesktopField>
 
@@ -168,7 +196,7 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               aria-label="Departure city"
               autoComplete="off"
-              className={`w-full h-[48px] text-[16px] px-[16px] ${fromInputClass}`}
+              className={`w-full h-[48px] text-[16px] px-[16px] ${inputBase}`}
             />
             {showDropdown && airports.length > 0 && (
               <AirportDropdown airports={airports} onSelect={selectAirport} />
@@ -188,21 +216,23 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
 
         <MobileField label="Leaving date" error={errors.departureDate}>
           <input
-            type="date"
+            type="text"
+            placeholder="YYYY-MM-DD"
             value={departureDate}
             onChange={(e) => setDepartureDate(e.target.value)}
             aria-label="Departure date"
-            className={`w-full h-[48px] text-[16px] px-[16px] ${fromInputClass}`}
+            className={`w-full h-[48px] text-[16px] px-[16px] ${inputBase}`}
           />
         </MobileField>
 
         <MobileField label="Returning date" error={errors.returnDate}>
           <input
-            type="date"
+            type="text"
+            placeholder="YYYY-MM-DD"
             value={returnDate}
             onChange={(e) => setReturnDate(e.target.value)}
             aria-label="Return date"
-            className={`w-full h-[48px] text-[16px] px-[16px] ${fromInputClass}`}
+            className={`w-full h-[48px] text-[16px] px-[16px] ${inputBase}`}
           />
         </MobileField>
 
