@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchFlights } from "@/lib/kiwi";
+import { searchFlights } from "@/lib/skyscrapper";
 import { searchMockFlights } from "@/lib/mockData";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const from = searchParams.get("from") ?? "";
-  const fromCode = searchParams.get("fromCode") ?? "";
+  const fromSkyId = searchParams.get("fromSkyId") ?? "";
+  const fromEntityId = searchParams.get("fromEntityId") ?? "";
   const departureDate = searchParams.get("departureDate") ?? "";
   const returnDate = searchParams.get("returnDate") ?? "";
   const currency = searchParams.get("currency") ?? "SEK";
@@ -17,19 +18,23 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const useApi = !!process.env.KIWI_API_KEY && !!fromCode;
+  const canUseApi = !!process.env.RAPIDAPI_KEY && !!fromSkyId && !!fromEntityId;
 
-  if (useApi) {
+  if (canUseApi) {
     try {
       const flights = await searchFlights(
-        fromCode,
+        fromSkyId,
+        fromEntityId,
         departureDate,
         returnDate,
         currency,
       );
-      return NextResponse.json({ flights, source: "kiwi" });
+
+      if (flights.length > 0) {
+        return NextResponse.json({ flights, source: "skyscanner" });
+      }
     } catch (error) {
-      console.error("Kiwi API failed, falling back to mock data:", error);
+      console.error("Sky Scrapper API failed, falling back to mock:", error);
     }
   }
 

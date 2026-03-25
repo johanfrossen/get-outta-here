@@ -5,14 +5,14 @@ import { Flight, SearchParams } from "@/types";
 
 interface FlightSearchResult {
   flights: Flight[];
-  source: "kiwi" | "mock";
+  source: "skyscanner" | "mock";
 }
 
 export function useFlightSearch() {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [source, setSource] = useState<"kiwi" | "mock" | null>(null);
+  const [source, setSource] = useState<"skyscanner" | "mock" | null>(null);
 
   const search = useCallback(async (params: SearchParams) => {
     setIsLoading(true);
@@ -21,7 +21,8 @@ export function useFlightSearch() {
     try {
       const qs = new URLSearchParams({
         from: params.from,
-        fromCode: params.fromCode,
+        fromSkyId: params.fromSkyId,
+        fromEntityId: params.fromEntityId,
         departureDate: params.departureDate,
         returnDate: params.returnDate,
       });

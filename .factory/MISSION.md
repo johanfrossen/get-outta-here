@@ -405,3 +405,20 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: Switched from Amadeus to Kiwi.com Tequila API because Amadeus self-service portal is being decommissioned July 2026 and new signups are broken. Kiwi has a free tier and simpler auth (single API key header vs OAuth2). Used custom hooks instead of React Query for simplicity -- can upgrade to React Query later if caching needs grow.
 **Issues**: Amadeus self-service signup is dead. Kiwi.com Tequila is the replacement.
 **Next**: M5 should add currency selector, recent searches, favorites, "Surprise me" button, weather preview, passenger count, responsive polish, accessibility audit, performance optimization, SEO meta tags.
+
+### Milestone 4 (revised) -- 2026-03-25
+**Status**: Complete (replaced Kiwi with Sky Scrapper)
+**What was built**: Switched from Kiwi.com Tequila (broken login) to Sky Scrapper API via RapidAPI (free $0/mo tier, real Skyscanner data). The API client searches 13 Mediterranean destinations in parallel, each getting the cheapest itinerary. Airport autocomplete uses the searchAirport endpoint with skyId/entityId for precise flight searches.
+**Files changed**:
+- `src/lib/kiwi.ts` -- Deleted
+- `src/lib/skyscrapper.ts` -- New: Sky Scrapper API client, parallel destination searches, response mapping
+- `src/app/api/flights/route.ts` -- Updated to use skyscrapper client
+- `src/app/api/airports/route.ts` -- Updated to use skyscrapper airport search
+- `src/hooks/useFlightSearch.ts` -- Updated for skyId/entityId params
+- `src/hooks/useAirportSearch.ts` -- Updated Airport type with skyId/entityId
+- `src/components/search/SearchForm.tsx` -- Tracks skyId/entityId from airport selection
+- `src/types/index.ts` -- SearchParams now includes fromSkyId, fromEntityId
+- `.env.local.example` -- Updated for RAPIDAPI_KEY
+**Changes from plan**: Double API pivot: Amadeus (dead) -> Kiwi (broken login) -> Sky Scrapper via RapidAPI (working, free). Searches destinations in parallel via Promise.allSettled for resilience. Falls back to mock data when API returns no results (common for far-future dates).
+**Issues**: API returns 0 results for dates far in the future (normal -- airlines don't have inventory yet). Mock data fallback handles this gracefully.
+**Next**: M5 features.

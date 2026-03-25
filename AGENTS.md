@@ -63,9 +63,10 @@ When starting a new session on this project:
 
 ## Flight APIs
 
-- **Primary**: Kiwi.com Tequila API (flight search, airport autocomplete). Free tier. API key in `KIWI_API_KEY` env var.
-- **Fallback**: Mock data with 18 realistic Mediterranean destinations. Used automatically when no API key is set or API fails.
+- **Primary**: Sky Scrapper API via RapidAPI (Skyscanner data). Free tier ($0/mo). API key in `RAPIDAPI_KEY` env var.
+- **Fallback**: Mock data with 18 realistic Mediterranean destinations. Used automatically when no API key is set, API fails, or no results found.
 - **Why not Amadeus**: Amadeus self-service portal is being decommissioned (July 2026), new signups are broken.
+- **Why not Kiwi.com**: Tequila portal login is broken (magic link auth failing for new accounts).
 - API keys stored in `.env.local`, never committed. See `.env.local.example`.
 
 ## Design System (from Figma)
@@ -119,7 +120,7 @@ When starting a new session on this project:
 - `app/api/airports/route.ts`: GET endpoint. Params: term. Returns airport suggestions from Kiwi locations API.
 - `hooks/useFlightSearch.ts`: Client-side hook wrapping the /api/flights endpoint.
 - `hooks/useAirportSearch.ts`: Debounced (300ms) airport autocomplete hook wrapping /api/airports.
-- `lib/kiwi.ts`: Server-side Kiwi.com Tequila API client. Searches 16 Mediterranean IATA codes, maps responses to Flight model.
+- `lib/skyscrapper.ts`: Server-side Sky Scrapper (Skyscanner) API client via RapidAPI. Searches 13 Mediterranean destinations in parallel, maps responses to Flight model.
 
 ## Figma Integration
 
@@ -154,7 +155,7 @@ _Record non-obvious technical choices here as the project evolves._
 | Currency default | SEK | Figma mockups show SEK pricing | 2026-03-25 |
 | Production font | JetBrains Mono Italic (or IBM Plex Mono) | Replace Figma's unlicensed ABC Social Mono trial | 2026-03-25 |
 | npm scripts | Direct node_modules paths | Directory path has special chars breaking .bin symlinks | 2026-03-25 |
-| Flight API | Kiwi.com Tequila (not Amadeus) | Amadeus self-service portal decommissioned; Kiwi has free tier | 2026-03-25 |
+| Flight API | Sky Scrapper via RapidAPI (not Amadeus/Kiwi) | Amadeus decommissioned, Kiwi login broken; RapidAPI has free tier | 2026-03-25 |
 
 ## Documentation Rules
 

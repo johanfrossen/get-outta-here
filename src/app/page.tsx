@@ -26,8 +26,8 @@ export default function Home() {
         />
         {source && hasSearched && !isLoading && (
           <p className="text-text-muted text-[10px] font-light italic text-center mt-[16px]">
-            {source === "kiwi"
-              ? "Live flight data from Kiwi.com"
+            {source === "skyscanner"
+              ? "Live flight data via Skyscanner"
               : "Showing sample flight data"}
           </p>
         )}

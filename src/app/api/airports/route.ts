@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchLocations } from "@/lib/kiwi";
+import { searchAirports } from "@/lib/skyscrapper";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -9,20 +9,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ locations: [] });
   }
 
-  if (!process.env.KIWI_API_KEY) {
+  if (!process.env.RAPIDAPI_KEY) {
     return NextResponse.json({ locations: [], source: "no-api-key" });
   }
 
   try {
-    const locations = await searchLocations(term);
-    return NextResponse.json({
-      locations: locations.map((loc) => ({
-        code: loc.code,
-        name: loc.name,
-        city: loc.city?.name ?? "",
-        country: loc.country?.name ?? "",
-      })),
-    });
+    const locations = await searchAirports(term);
+    return NextResponse.json({ locations });
   } catch (error) {
     console.error("Airport search failed:", error);
     return NextResponse.json({ locations: [] }, { status: 500 });

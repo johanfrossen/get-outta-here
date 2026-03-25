@@ -21,6 +21,8 @@ const INPUT_FOCUS =
 export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   const [from, setFrom] = useState("");
   const [fromCode, setFromCode] = useState("");
+  const [fromSkyId, setFromSkyId] = useState("");
+  const [fromEntityId, setFromEntityId] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
@@ -57,6 +59,8 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
     onSearch({
       from: from.trim(),
       fromCode,
+      fromSkyId,
+      fromEntityId,
       departureDate,
       returnDate,
     });
@@ -65,6 +69,8 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   function handleFromChange(value: string) {
     setFrom(value);
     setFromCode("");
+    setFromSkyId("");
+    setFromEntityId("");
     searchAirports(value);
     setShowDropdown(true);
   }
@@ -72,6 +78,8 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   function selectAirport(airport: Airport) {
     setFrom(`${airport.city || airport.name} (${airport.code})`);
     setFromCode(airport.code);
+    setFromSkyId(airport.skyId);
+    setFromEntityId(airport.entityId);
     setShowDropdown(false);
     clearAirports();
   }

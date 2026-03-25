@@ -5,6 +5,8 @@ import { useState, useCallback, useRef } from "react";
 export interface Airport {
   code: string;
   name: string;
+  skyId: string;
+  entityId: string;
   city: string;
   country: string;
 }
