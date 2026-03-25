@@ -366,3 +366,26 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: Search button added inline with desktop form (not in original Figma but needed for UX). Mobile search button full-width below form. Form validation inline with role="alert" for accessibility.
 **Issues**: None.
 **Next**: M3 should add animations -- hero text reveal, card entrance stagger, departure board flip, skeleton shimmer, hover card lift, search button pulse, price counter, input focus animation. All with prefers-reduced-motion support.
+
+### Milestone 3 -- 2026-03-25
+**Status**: Complete
+**What was built**: Full animation layer across the UI. All animations respect prefers-reduced-motion with static fallbacks.
+**Files**:
+- `src/components/animations/HeroText.tsx` -- Staggered character-by-character fade-up using Framer Motion (0.04s between chars)
+- `src/components/animations/StaggerGrid.tsx` -- Card cascade entrance with 0.05s staggered delays, fade + slide up
+- `src/components/animations/FlipRow.tsx` -- Airport departure board flip effect for DataRow items (rotateX from -90 to 0)
+- `src/components/animations/PriceCounter.tsx` -- RAF-based count-up ticker from 0 to value with easeOutCubic
+- `src/components/animations/index.ts` -- Barrel export
+- `src/hooks/useReducedMotion.ts` -- Hook using useSyncExternalStore to track prefers-reduced-motion
+- `src/app/globals.css` -- Added dark shimmer keyframes, search button glow-pulse, reduced-motion media query overrides
+- `src/components/ui/Card.tsx` -- Added hover glow (salmon shadow) + subtle scale with motion-reduce fallback
+- `src/components/ui/DataRow.tsx` -- Added renderValue prop for PriceCounter integration
+- `src/components/flights/FlightCard.tsx` -- Integrated FlipRow on all data rows, PriceCounter on prices
+- `src/components/flights/ResultsGrid.tsx` -- Wrapped with StaggerGrid/StaggerItem
+- `src/components/flights/SkeletonCard.tsx` -- Switched from animate-pulse to custom dark skeleton-shimmer
+- `src/components/search/SearchForm.tsx` -- Added input focus glow shadow, search button pulse when form valid
+- `src/app/page.tsx` -- Replaced h1 with HeroText component
+- `src/test/setup.ts` -- Added window.matchMedia mock for jsdom
+**Changes from plan**: Skipped tagline rotation (optional per spec). Used useSyncExternalStore instead of useState+useEffect for reduced motion (cleaner, lint-compliant). PriceCounter uses direct DOM manipulation via ref instead of React state to avoid lint issues with setState in effects. Departure board flip uses Framer Motion instead of GSAP for consistency.
+**Issues**: None.
+**Next**: M4 should integrate Amadeus API -- API route, OAuth2 token management, airport autocomplete, flight search with multiple Mediterranean IATA codes, response mapping, error handling with mock fallback, React Query caching.

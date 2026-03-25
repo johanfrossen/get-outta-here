@@ -32,3 +32,33 @@ body {
   font-family: var(--font-mono);
   min-height: 100vh;
 }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(134, 134, 134, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 149, 149, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(255, 149, 149, 0.6); }
+}
+
+.search-btn-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer { animation: none; }
+  .search-btn-pulse { animation: none; }
+}

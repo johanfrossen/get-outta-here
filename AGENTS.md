@@ -12,11 +12,11 @@ When starting a new session on this project:
 
 ## Current Status
 
-- **Phase**: Milestone 2 complete, ready for Milestone 3
-- **Milestones completed**: M1 (Foundation & Design System), M2 (Core Search UI & Flight Cards)
-- **Next step**: Milestone 3 -- Animations & Motion
+- **Phase**: Milestone 3 complete, ready for Milestone 4
+- **Milestones completed**: M1 (Foundation), M2 (Search UI & Cards), M3 (Animations & Motion)
+- **Next step**: Milestone 4 -- Amadeus Flight API Integration
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: Full search-to-results flow with SearchForm (desktop horizontal + mobile stacked), FlightCard (responsive desktop/mobile), ResultsGrid (4-col grid), SkeletonCard, EmptyState, 18 Mediterranean destinations mock data, form validation. 25 passing tests.
+- **What exists**: Full animated search-to-results flow. Hero text character reveal, staggered card entrance, departure board flip rows, price counter ticker, dark shimmer skeletons, hover glow cards, search button pulse, input focus glow. All with prefers-reduced-motion fallbacks. 25 passing tests.
 
 ## Core Commands
 
@@ -108,6 +108,10 @@ When starting a new session on this project:
 - `Card` (`components/ui/Card.tsx`): Dark gray bg (#222), 16px padding, 8px radius
 - `SkeletonCard` (`components/flights/SkeletonCard.tsx`): Pulse-animated dark placeholders matching card structure
 - `EmptyState` (`components/flights/EmptyState.tsx`): Pre-search message in salmon
+- `HeroText` (`components/animations/HeroText.tsx`): Staggered character-by-character fade-up reveal
+- `StaggerGrid` / `StaggerItem` (`components/animations/StaggerGrid.tsx`): Cascading card entrance with 0.05s delays
+- `FlipRow` (`components/animations/FlipRow.tsx`): Airport split-flap display effect for data rows
+- `PriceCounter` (`components/animations/PriceCounter.tsx`): RAF-based count-up ticker from 0 to value
 
 ## Figma Integration
 

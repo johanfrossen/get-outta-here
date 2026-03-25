@@ -2,6 +2,7 @@
 
 import { Flight } from "@/types";
 import { Card, DataRow, Button } from "@/components/ui";
+import { FlipRow, PriceCounter } from "@/components/animations";
 
 interface FlightCardProps {
   flight: Flight;
@@ -11,27 +12,37 @@ function FlightSection({
   title,
   leg,
   showFromTo = false,
+  baseDelay = 0,
 }: {
   title: string;
   leg: Flight["outbound"];
   showFromTo?: boolean;
+  baseDelay?: number;
 }) {
+  const rows = showFromTo
+    ? [
+        { label: "From", value: leg.departureAirport },
+        { label: "To", value: leg.arrivalAirport },
+        { label: "Departure time", value: leg.departureTime },
+        { label: "Landing time", value: leg.landingTime },
+      ]
+    : [
+        { label: "Departure from", value: leg.arrivalAirport },
+        { label: "Departure time", value: leg.departureTime },
+        { label: "Landing time", value: leg.landingTime },
+      ];
+
   return (
     <div>
       <h3 className="text-accent text-[12px] font-light italic mb-[16px]">
         {title}
       </h3>
       <div className="flex flex-col">
-        {showFromTo ? (
-          <>
-            <DataRow label="From" value={leg.departureAirport} />
-            <DataRow label="To" value={leg.arrivalAirport} />
-          </>
-        ) : (
-          <DataRow label="Departure from" value={leg.arrivalAirport} />
-        )}
-        <DataRow label="Departure time" value={leg.departureTime} />
-        <DataRow label="Landing time" value={leg.landingTime} />
+        {rows.map((row, i) => (
+          <FlipRow key={row.label} delay={baseDelay + i * 0.08}>
+            <DataRow label={row.label} value={row.value} />
+          </FlipRow>
+        ))}
       </div>
     </div>
   );
@@ -54,6 +65,7 @@ export function FlightCard({ flight }: FlightCardProps) {
           <FlightSection
             title="Flight outta here"
             leg={flight.outbound}
+            baseDelay={0.1}
           />
         </div>
         <div className="xl:hidden">
@@ -61,17 +73,23 @@ export function FlightCard({ flight }: FlightCardProps) {
             title="Flight outta here"
             leg={flight.outbound}
             showFromTo
+            baseDelay={0.1}
           />
         </div>
 
         <div className="hidden xl:block">
-          <FlightSection title="Flight back" leg={flight.returnFlight} />
+          <FlightSection
+            title="Flight back"
+            leg={flight.returnFlight}
+            baseDelay={0.4}
+          />
         </div>
         <div className="xl:hidden">
           <FlightSection
             title="Flight back"
             leg={flight.returnFlight}
             showFromTo
+            baseDelay={0.4}
           />
         </div>
 
@@ -80,14 +98,32 @@ export function FlightCard({ flight }: FlightCardProps) {
             Flight price
           </h3>
           <div className="flex flex-col">
-            <DataRow
-              label="Basic"
-              value={`${flight.price.basic} ${flight.price.currency}`}
-            />
-            <DataRow
-              label="With 1 luggage"
-              value={`${flight.price.withLuggage} ${flight.price.currency}`}
-            />
+            <FlipRow delay={0.7}>
+              <DataRow
+                label="Basic"
+                value=""
+                renderValue={
+                  <PriceCounter
+                    value={flight.price.basic}
+                    suffix={` ${flight.price.currency}`}
+                    className="text-accent text-[12px] font-light italic"
+                  />
+                }
+              />
+            </FlipRow>
+            <FlipRow delay={0.78}>
+              <DataRow
+                label="With 1 luggage"
+                value=""
+                renderValue={
+                  <PriceCounter
+                    value={flight.price.withLuggage}
+                    suffix={` ${flight.price.currency}`}
+                    className="text-accent text-[12px] font-light italic"
+                  />
+                }
+              />
+            </FlipRow>
           </div>
         </div>
 

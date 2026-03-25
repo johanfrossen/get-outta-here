@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { SearchForm } from "@/components/search";
 import { ResultsGrid } from "@/components/flights";
+import { HeroText } from "@/components/animations";
 import { searchMockFlights } from "@/lib/mockData";
 import { Flight, SearchParams } from "@/types";
 
@@ -25,9 +26,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background px-[16px] pt-[48px] xl:px-[24px]">
-      <h1 className="text-accent text-[27px] xl:text-[41px] font-extralight italic text-left xl:text-center mb-[48px]">
-        GET OUTTA HERE
-      </h1>
+      <HeroText
+        text="GET OUTTA HERE"
+        className="text-accent text-[27px] xl:text-[41px] font-extralight italic text-left xl:text-center mb-[48px]"
+      />
 
       <SearchForm onSearch={handleSearch} isLoading={isLoading} />
 

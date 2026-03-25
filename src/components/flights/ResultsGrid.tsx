@@ -4,6 +4,7 @@ import { Flight } from "@/types";
 import { FlightCard } from "./FlightCard";
 import { SkeletonCard } from "./SkeletonCard";
 import { EmptyState } from "./EmptyState";
+import { StaggerGrid, StaggerItem } from "@/components/animations";
 
 interface ResultsGridProps {
   flights: Flight[];
@@ -41,10 +42,12 @@ export function ResultsGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-[8px]">
+    <StaggerGrid className="grid grid-cols-1 xl:grid-cols-4 gap-[8px]">
       {flights.map((flight) => (
-        <FlightCard key={flight.id} flight={flight} />
+        <StaggerItem key={flight.id}>
+          <FlightCard flight={flight} />
+        </StaggerItem>
       ))}
-    </div>
+    </StaggerGrid>
   );
 }

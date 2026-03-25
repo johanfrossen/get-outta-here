@@ -16,7 +16,7 @@ describe("ResultsGrid", () => {
     const { container } = render(
       <ResultsGrid flights={[]} isLoading={true} hasSearched={true} />,
     );
-    const skeletons = container.querySelectorAll(".animate-pulse");
+    const skeletons = container.querySelectorAll(".skeleton-shimmer");
     expect(skeletons.length).toBe(8);
   });
 
