@@ -452,3 +452,27 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 - Cleaned up stale AGENTS.md references (Amadeus, Kiwi, mock data)
 **Validation**: typecheck pass, lint clean, 23 tests passing, build successful
 **Ready for**: Vercel deployment
+
+### API Migration to Travelpayouts -- 2026-03-25
+**Status**: Complete
+**What was built**: Replaced Sky Scrapper (RapidAPI, 20 req/month) with Travelpayouts/Aviasales Data API (free, unlimited requests, 1000/hour rate limit). Simplified the codebase by removing skyId/entityId complexity that was specific to Sky Scrapper.
+**Files changed**:
+- `src/lib/skyscrapper.ts` -- Deleted
+- `src/lib/travelpayouts.ts` -- New: Travelpayouts API client. Parallel search across 13 Mediterranean destinations. Uses `prices_for_dates` endpoint. Booking links to Aviasales. Airport autocomplete via public `places2` endpoint (no token needed).
+- `src/app/api/flights/route.ts` -- Simplified: uses `from` (IATA code), no skyId/entityId. Env var changed to `TRAVELPAYOUTS_TOKEN`.
+- `src/app/api/airports/route.ts` -- Simplified: no API key needed (public endpoint), no `RAPIDAPI_KEY` check.
+- `src/types/index.ts` -- Removed `fromSkyId` and `fromEntityId` from SearchParams.
+- `src/hooks/useFlightSearch.ts` -- Sends `fromCode` as `from` param. Source type changed to `"aviasales"`.
+- `src/hooks/useAirportSearch.ts` -- Airport type simplified: removed skyId/entityId, added type field.
+- `src/hooks/useLocalStorage.ts` -- RecentSearch type: removed skyId/entityId.
+- `src/components/search/SearchForm.tsx` -- Removed skyId/entityId state tracking and passing.
+- `src/components/search/RecentSearches.tsx` -- Removed skyId/entityId from onSelect callback.
+- `src/components/search/SearchForm.test.tsx` -- Updated expected onSearch params (no skyId/entityId).
+- `src/app/page.tsx` -- Source label changed from "skyscanner" to "aviasales".
+- `.env.local.example` -- Updated for `TRAVELPAYOUTS_TOKEN`.
+- `.env.local` -- Updated with actual token (gitignored, never committed).
+**Changes from plan**: Third API pivot: Sky Scrapper exhausted its 20 req/month in a single search. After trying SerpAPI (phone verification) and considering Travelpayouts (initially declined as affiliate platform, then accepted after clarifying the Data API has no promotion requirement).
+**Key improvement**: No more API batching/rate limiting needed. Travelpayouts allows 1000 req/hour free. All 13 destinations searched in parallel without delays.
+**Validation**: typecheck pass, lint clean, 23 tests passing, build successful, API verified returning real flights (ARN->BCN at 794 SEK, ARN->ATH working).
+**Env var for Vercel**: `TRAVELPAYOUTS_TOKEN`
+**Next**: Deploy to Vercel.
