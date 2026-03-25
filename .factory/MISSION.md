@@ -440,3 +440,15 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: Removed mock data fallback entirely per user preference. Skipped weather preview and passenger count to keep scope focused. Currency selector placed next to title instead of separate section.
 **Issues**: None.
 **Next**: Deploy to Vercel. Add RAPIDAPI_KEY environment variable in Vercel project settings.
+
+### Final Audit -- 2026-03-25
+**Status**: Complete
+**What was fixed**:
+- Currency selector now wired through to API (was display-only before)
+- Removed mockData.ts and its test (no mock data per user request)
+- Fixed desktop title centering (currency selector uses absolute positioning)
+- Book button links to Skyscanner search URL (was non-functional before)
+- API batching: 3 concurrent requests + 600ms delay between batches (prevents rate limit 429s on free tier)
+- Cleaned up stale AGENTS.md references (Amadeus, Kiwi, mock data)
+**Validation**: typecheck pass, lint clean, 23 tests passing, build successful
+**Ready for**: Vercel deployment

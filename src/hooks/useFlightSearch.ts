@@ -30,6 +30,7 @@ export function useFlightSearch() {
         fromEntityId: params.fromEntityId,
         departureDate: params.departureDate,
         returnDate: params.returnDate,
+        ...(params.currency ? { currency: params.currency } : {}),
       });
 
       const res = await fetch(`/api/flights?${qs}`);

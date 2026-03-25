@@ -135,7 +135,18 @@ export function FlightCard({ flight, isFavorite = false, onToggleFavorite }: Fli
           </div>
         </div>
 
-        <Button>Book: {flight.destination}</Button>
+        {flight.bookingUrl ? (
+          <a
+            href={flight.bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Button>Book: {flight.destination}</Button>
+          </a>
+        ) : (
+          <Button>Book: {flight.destination}</Button>
+        )}
       </div>
     </Card>
   );

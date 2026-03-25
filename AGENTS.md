@@ -16,7 +16,7 @@ When starting a new session on this project:
 - **Milestones completed**: M1 (Foundation), M2 (Search UI), M3 (Animations), M4 (API), M5 (Features & Polish)
 - **Next step**: Deploy to Vercel, add RAPIDAPI_KEY env var
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: Full app with Sky Scrapper API (Skyscanner data, free tier), currency selector, recent searches, favorites, surprise me, SEO meta tags. No mock data fallback -- shows "no flights found" when API returns empty. 26 passing tests.
+- **What exists**: Full app with Sky Scrapper API (Skyscanner data, free tier), currency selector (SEK/EUR/GBP/USD), recent searches, favorites, surprise me, booking links to Skyscanner, SEO meta tags. No mock data. 23 passing tests.
 
 ## Core Commands
 
@@ -56,8 +56,8 @@ When starting a new session on this project:
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4 with 8-point spacing system
-- **Animations**: Framer Motion (motion) for UI animations, GSAP for complex sequences
-- **State**: React Query / SWR for server state, Zustand for client state
+- **Animations**: Framer Motion for UI animations (hero text, card stagger, flip rows, price counter)
+- **State**: Custom hooks with localStorage persistence (currency, favorites, recent searches)
 - **Deployment**: Vercel
 - **Testing**: Vitest + React Testing Library
 
@@ -116,11 +116,11 @@ When starting a new session on this project:
 - `PriceCounter` (`components/animations/PriceCounter.tsx`): RAF-based count-up ticker from 0 to value
 
 ### API Routes & Hooks
-- `app/api/flights/route.ts`: GET endpoint. Params: from, fromCode, departureDate, returnDate, currency. Tries Kiwi API first, falls back to mock data.
-- `app/api/airports/route.ts`: GET endpoint. Params: term. Returns airport suggestions from Kiwi locations API.
-- `hooks/useFlightSearch.ts`: Client-side hook wrapping the /api/flights endpoint.
+- `app/api/flights/route.ts`: GET endpoint. Params: from, fromSkyId, fromEntityId, departureDate, returnDate, currency. Searches via Sky Scrapper API. Returns empty array with message if unavailable.
+- `app/api/airports/route.ts`: GET endpoint. Params: term. Returns airport suggestions with skyId/entityId.
+- `hooks/useFlightSearch.ts`: Client-side hook wrapping /api/flights with loading/error/source state.
 - `hooks/useAirportSearch.ts`: Debounced (300ms) airport autocomplete hook wrapping /api/airports.
-- `lib/skyscrapper.ts`: Server-side Sky Scrapper (Skyscanner) API client via RapidAPI. Searches 13 Mediterranean destinations in parallel, maps responses to Flight model.
+- `lib/skyscrapper.ts`: Server-side Sky Scrapper (Skyscanner) API client via RapidAPI. Batched search (3 at a time with 600ms delay) across 13 Mediterranean destinations. Generates Skyscanner booking URLs.
 
 ### M5 Features
 - `CurrencySelector` (`components/ui/CurrencySelector.tsx`): Toggle SEK/EUR/GBP/USD, persisted in localStorage
@@ -156,13 +156,13 @@ _Record non-obvious technical choices here as the project evolves._
 | Framework | Next.js 15 App Router | Vercel-native deploy, API routes for key protection, SSR | 2026-03-25 |
 | Styling | Tailwind CSS v4 | 8pt grid maps directly, rapid iteration | 2026-03-25 |
 | Animation | Framer Motion + GSAP | FM for React integration, GSAP for complex timelines | 2026-03-25 |
-| Flight API | Amadeus Self-Service | Best free tier, real data, comprehensive endpoints | 2026-03-25 |
+| Flight API | Sky Scrapper (RapidAPI) | Amadeus dead, Kiwi broken; free Skyscanner data | 2026-03-25 |
 | Desktop grid | 4 columns (not 6) | Figma design shows 4 cards per row at 1440px | 2026-03-25 |
 | Theme | Dark mode only | Figma design is black bg with salmon accents | 2026-03-25 |
 | Currency default | SEK | Figma mockups show SEK pricing | 2026-03-25 |
 | Production font | JetBrains Mono Italic (or IBM Plex Mono) | Replace Figma's unlicensed ABC Social Mono trial | 2026-03-25 |
 | npm scripts | Direct node_modules paths | Directory path has special chars breaking .bin symlinks | 2026-03-25 |
-| Flight API | Sky Scrapper via RapidAPI (not Amadeus/Kiwi) | Amadeus decommissioned, Kiwi login broken; RapidAPI has free tier | 2026-03-25 |
+| API batching | 3 concurrent + 600ms delay | Avoids RapidAPI free tier rate limits | 2026-03-25 |
 
 ## Documentation Rules
 

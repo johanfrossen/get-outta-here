@@ -78,6 +78,19 @@ function formatTime(iso: string): string {
   return `${(h % 12 || 12).toString().padStart(2, "0")}:${m} ${ampm}`;
 }
 
+function buildBookingUrl(
+  originCode: string,
+  destCode: string,
+  departDate: string,
+  returnDate: string,
+): string {
+  const fmt = (iso: string) => {
+    const d = new Date(iso);
+    return `${d.getFullYear().toString().slice(2)}${(d.getMonth() + 1).toString().padStart(2, "0")}${d.getDate().toString().padStart(2, "0")}`;
+  };
+  return `https://www.skyscanner.com/transport/flights/${originCode.toLowerCase()}/${destCode.toLowerCase()}/${fmt(departDate)}/${fmt(returnDate)}/`;
+}
+
 function mapItineraryToFlight(
   it: SkyItinerary,
   destCode: string,
@@ -117,7 +130,58 @@ function mapItineraryToFlight(
       withLuggage: Math.round(it.price.raw * 1.25),
       currency,
     },
+    bookingUrl: outLeg && retLeg
+      ? buildBookingUrl(
+          outLeg.origin.displayCode,
+          outLeg.destination.displayCode,
+          outLeg.departure,
+          retLeg.departure,
+        )
+      : undefined,
   };
+}
+
+async function searchOneDest(
+  originSkyId: string,
+  originEntityId: string,
+  code: string,
+  dest: { skyId: string; entityId: string; name: string },
+  departureDate: string,
+  returnDate: string,
+  currency: string,
+): Promise<Flight[]> {
+  const params = new URLSearchParams({
+    originSkyId,
+    destinationSkyId: dest.skyId,
+    originEntityId,
+    destinationEntityId: dest.entityId,
+    date: departureDate,
+    returnDate,
+    adults: "1",
+    currency,
+    market: "SE",
+    countryCode: "SE",
+  });
+
+  const res = await fetch(`${BASE_URL}/searchFlights?${params}`, {
+    headers: headers(),
+  });
+
+  if (!res.ok) return [];
+
+  const data: SkySearchResponse = await res.json();
+  if (!data.status || !data.data?.itineraries?.length) return [];
+
+  return data.data.itineraries
+    .slice(0, 1)
+    .map((it) => mapItineraryToFlight(it, code, dest.name, currency));
+}
+
+const BATCH_SIZE = 3;
+const BATCH_DELAY_MS = 600;
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function searchFlights(
@@ -130,41 +194,21 @@ export async function searchFlights(
   const allFlights: Flight[] = [];
   const destinations = Object.entries(MEDITERRANEAN_DESTINATIONS);
 
-  const searches = destinations.map(async ([code, dest]) => {
-    try {
-      const params = new URLSearchParams({
-        originSkyId,
-        destinationSkyId: dest.skyId,
-        originEntityId,
-        destinationEntityId: dest.entityId,
-        date: departureDate,
-        returnDate,
-        adults: "1",
-        currency,
-        market: "SE",
-        countryCode: "SE",
-      });
+  for (let i = 0; i < destinations.length; i += BATCH_SIZE) {
+    const batch = destinations.slice(i, i + BATCH_SIZE);
+    const results = await Promise.allSettled(
+      batch.map(([code, dest]) =>
+        searchOneDest(originSkyId, originEntityId, code, dest, departureDate, returnDate, currency),
+      ),
+    );
 
-      const res = await fetch(`${BASE_URL}/searchFlights?${params}`, {
-        headers: headers(),
-      });
-
-      if (!res.ok) return [];
-
-      const data: SkySearchResponse = await res.json();
-      if (!data.status || !data.data?.itineraries?.length) return [];
-
-      return data.data.itineraries
-        .slice(0, 1)
-        .map((it) => mapItineraryToFlight(it, code, dest.name, currency));
-    } catch {
-      return [];
+    for (const r of results) {
+      if (r.status === "fulfilled") allFlights.push(...r.value);
     }
-  });
 
-  const results = await Promise.allSettled(searches);
-  for (const r of results) {
-    if (r.status === "fulfilled") allFlights.push(...r.value);
+    if (i + BATCH_SIZE < destinations.length) {
+      await delay(BATCH_DELAY_MS);
+    }
   }
 
   return allFlights.sort((a, b) => a.price.basic - b.price.basic);

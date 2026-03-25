@@ -23,6 +23,7 @@ export default function Home() {
 
   const handleSearch = useCallback(
     (params: SearchParams) => {
+      const withCurrency = { ...params, currency };
       addRecentSearch({
         from: params.from,
         fromCode: params.fromCode,
@@ -31,9 +32,9 @@ export default function Home() {
         departureDate: params.departureDate,
         returnDate: params.returnDate,
       });
-      search(params);
+      search(withCurrency);
     },
-    [search, addRecentSearch],
+    [search, addRecentSearch, currency],
   );
 
   const handleSurprise = useCallback(
@@ -44,27 +45,27 @@ export default function Home() {
       const ret = new Date(depart);
       ret.setDate(depart.getDate() + 7);
 
-      const params: SearchParams = {
+      handleSearch({
         from,
         fromCode,
         fromSkyId,
         fromEntityId,
         departureDate: depart.toISOString().split("T")[0],
         returnDate: ret.toISOString().split("T")[0],
-      };
-      handleSearch(params);
+      });
     },
     [handleSearch],
   );
 
   return (
     <main className="min-h-screen bg-background px-[16px] pt-[48px] xl:px-[24px] pb-[48px]">
-      <div className="flex justify-between items-start mb-[48px]">
+      {/* Header: title centered on desktop, currency top-right */}
+      <div className="relative mb-[48px]">
         <HeroText
           text="GET OUTTA HERE"
-          className="text-accent text-[27px] xl:text-[41px] font-extralight italic text-left xl:text-center flex-1"
+          className="text-accent text-[27px] xl:text-[41px] font-extralight italic text-left xl:text-center"
         />
-        <div className="flex items-center gap-[8px] pt-[8px]">
+        <div className="xl:absolute xl:right-0 xl:top-[8px] mt-[16px] xl:mt-0">
           <CurrencySelector value={currency} onChange={setCurrency} />
         </div>
       </div>
@@ -72,10 +73,7 @@ export default function Home() {
       <SearchForm onSearch={handleSearch} isLoading={isLoading} />
 
       <div className="flex justify-center gap-[16px] mt-[16px] items-center">
-        <SurpriseMe
-          onSurprise={handleSurprise}
-          disabled={isLoading}
-        />
+        <SurpriseMe onSurprise={handleSurprise} disabled={isLoading} />
       </div>
 
       <RecentSearches searches={recentSearches} onSelect={handleSearch} />

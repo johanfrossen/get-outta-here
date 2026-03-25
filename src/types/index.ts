@@ -6,6 +6,7 @@ export interface Flight {
   outbound: FlightLeg;
   returnFlight: FlightLeg;
   price: FlightPrice;
+  bookingUrl?: string;
 }
 
 export interface FlightLeg {
@@ -31,4 +32,5 @@ export interface SearchParams {
   fromEntityId: string;
   departureDate: string;
   returnDate: string;
+  currency?: string;
 }
