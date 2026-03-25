@@ -48,14 +48,16 @@ A flight search web application that helps users find Mediterranean escape fligh
 - Fallback: Mock data with realistic Mediterranean flight results
 - API keys stored in `.env.local`, never committed
 
-## Design System
+## Design System (from Figma)
 
-- **Spacing**: 8-point grid system (8, 16, 24, 32, 40, 48px etc.)
-- **Typography**: Clean modern sans-serif, clear hierarchy
-- **Colors**: Travel-inspired palette with Mediterranean feel
-- **Responsive**: Mobile-first, breakpoints at 640px (sm), 768px (md), 1024px (lg), 1200px (xl)
-- **Grid**: 6 columns on xl+, 1 column below (strict requirement)
-- **Figma**: Reference Figma files for UI decisions. Use Figma MCP tools to extract design context.
+- **Theme**: Dark mode. Black (`#000`) background, dark gray (`#222`) cards, salmon pink (`#ff9595`) accents.
+- **Typography**: Monospace italic (ABC Social Mono -> use JetBrains Mono Italic or IBM Plex Mono Light Italic). Helvetica Neue for mobile labels.
+- **Spacing**: 8-point grid (8, 16, 24, 32, 40, 48px). Card padding 16px. Section gaps 48px inside cards.
+- **Colors**: `#000` bg, `#222` card bg, `#ff9595` accent, `#fff` labels, `#868686` borders, `#8c8c8c` muted text.
+- **Responsive**: Mobile-first. sm: 640px, md: 768px, lg: 1024px, xl: 1200px.
+- **Grid**: 4 columns on xl+, 1 column below (per Figma).
+- **Border radius**: 8px on cards and inputs.
+- **Figma file**: `Ojw2ZsT9w024q1nYbPCwb6`. Use Figma MCP tools to extract exact design context.
 
 ## Conventions
 
@@ -79,8 +81,9 @@ A flight search web application that helps users find Mediterranean escape fligh
 
 - `Header`: Brand name "Get Outta Here" + tagline
 - `SearchForm`: Departure city, departure date, return date inputs
-- `ResultsGrid`: Responsive grid of flight cards (6 cols xl, 1 col mobile)
-- `FlightCard`: Destination, description, times, prices (base + luggage), CTA
+- `ResultsGrid`: Responsive grid of flight cards (4 cols xl, 1 col mobile)
+- `FlightCard`: Destination, description, outbound flight details, return flight details, prices (Basic + With luggage in SEK), "Book" CTA
+- `DataRow`: Reusable two-column row (white label, salmon value, gray border top/bottom)
 - `SkeletonCard`: Loading placeholder with animation
 - `EmptyState`: Friendly message before search
 
