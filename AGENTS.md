@@ -12,11 +12,11 @@ When starting a new session on this project:
 
 ## Current Status
 
-- **Phase**: Milestone 4 complete, ready for Milestone 5
-- **Milestones completed**: M1 (Foundation), M2 (Search UI & Cards), M3 (Animations), M4 (API Integration)
-- **Next step**: Milestone 5 -- Additional Features & Polish
+- **Phase**: Milestone 5 complete -- all milestones done
+- **Milestones completed**: M1 (Foundation), M2 (Search UI), M3 (Animations), M4 (API), M5 (Features & Polish)
+- **Next step**: Deploy to Vercel, add RAPIDAPI_KEY env var
 - **Repository**: https://github.com/johanfrossen/get-outta-here
-- **What exists**: Full app with Kiwi.com Tequila API integration (free tier), airport autocomplete, API routes proxying to Kiwi with automatic mock data fallback. 25 passing tests.
+- **What exists**: Full app with Sky Scrapper API (Skyscanner data, free tier), currency selector, recent searches, favorites, surprise me, SEO meta tags. No mock data fallback -- shows "no flights found" when API returns empty. 26 passing tests.
 
 ## Core Commands
 
@@ -64,7 +64,7 @@ When starting a new session on this project:
 ## Flight APIs
 
 - **Primary**: Sky Scrapper API via RapidAPI (Skyscanner data). Free tier ($0/mo). API key in `RAPIDAPI_KEY` env var.
-- **Fallback**: Mock data with 18 realistic Mediterranean destinations. Used automatically when no API key is set, API fails, or no results found.
+- **No mock fallback**: Shows "No flights found" with helpful message when API returns empty or is unavailable.
 - **Why not Amadeus**: Amadeus self-service portal is being decommissioned (July 2026), new signups are broken.
 - **Why not Kiwi.com**: Tequila portal login is broken (magic link auth failing for new accounts).
 - API keys stored in `.env.local`, never committed. See `.env.local.example`.
@@ -121,6 +121,13 @@ When starting a new session on this project:
 - `hooks/useFlightSearch.ts`: Client-side hook wrapping the /api/flights endpoint.
 - `hooks/useAirportSearch.ts`: Debounced (300ms) airport autocomplete hook wrapping /api/airports.
 - `lib/skyscrapper.ts`: Server-side Sky Scrapper (Skyscanner) API client via RapidAPI. Searches 13 Mediterranean destinations in parallel, maps responses to Flight model.
+
+### M5 Features
+- `CurrencySelector` (`components/ui/CurrencySelector.tsx`): Toggle SEK/EUR/GBP/USD, persisted in localStorage
+- `FavoriteButton` (`components/ui/FavoriteButton.tsx`): Heart icon on flight cards, persisted in localStorage
+- `RecentSearches` (`components/search/RecentSearches.tsx`): Last 5 searches as salmon-outlined chips
+- `SurpriseMe` (`components/search/SurpriseMe.tsx`): Random origin + dates, triggers search
+- `hooks/useLocalStorage.ts`: Generic localStorage hook + useCurrency, useRecentSearches, useFavorites
 
 ## Figma Integration
 

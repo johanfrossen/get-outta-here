@@ -26,4 +26,16 @@ describe("ResultsGrid", () => {
     );
     expect(screen.getByText(/No flights found/)).toBeInTheDocument();
   });
+
+  it("shows API message when provided", () => {
+    render(
+      <ResultsGrid
+        flights={[]}
+        isLoading={false}
+        hasSearched={true}
+        message="Please select a departure airport from the suggestions"
+      />,
+    );
+    expect(screen.getByText(/select a departure airport/)).toBeInTheDocument();
+  });
 });

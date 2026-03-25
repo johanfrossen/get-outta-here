@@ -422,3 +422,21 @@ This means AGENTS.md must be a **living document** that grows with the project, 
 **Changes from plan**: Double API pivot: Amadeus (dead) -> Kiwi (broken login) -> Sky Scrapper via RapidAPI (working, free). Searches destinations in parallel via Promise.allSettled for resilience. Falls back to mock data when API returns no results (common for far-future dates).
 **Issues**: API returns 0 results for dates far in the future (normal -- airlines don't have inventory yet). Mock data fallback handles this gracefully.
 **Next**: M5 features.
+
+### Milestone 5 -- 2026-03-25
+**Status**: Complete
+**What was built**: All M5 features. Removed mock data fallback per user request -- API returns empty results gracefully with helpful messages. Added currency selector (SEK/EUR/GBP/USD persisted in localStorage), favorites (heart icon on cards, localStorage), recent searches (last 5 as salmon chips), "Surprise me" button (random origin + dates 2 weeks out), SEO meta tags (Open Graph, Twitter card).
+**Files**:
+- `src/app/api/flights/route.ts` -- Removed mock fallback, returns empty flights with descriptive messages
+- `src/hooks/useLocalStorage.ts` -- Generic localStorage hook + useCurrency, useRecentSearches, useFavorites
+- `src/components/ui/CurrencySelector.tsx` -- SEK/EUR/GBP/USD toggle
+- `src/components/ui/FavoriteButton.tsx` -- Heart SVG with salmon fill when active
+- `src/components/search/RecentSearches.tsx` -- Salmon-outlined chips for last 5 searches
+- `src/components/search/SurpriseMe.tsx` -- Random origin button
+- `src/components/flights/FlightCard.tsx` -- Added favorite button in card header
+- `src/components/flights/ResultsGrid.tsx` -- Added message prop, favorites passthrough
+- `src/app/page.tsx` -- Wired currency, favorites, recent searches, surprise me
+- `src/app/layout.tsx` -- Added Open Graph, Twitter, robots meta tags
+**Changes from plan**: Removed mock data fallback entirely per user preference. Skipped weather preview and passenger count to keep scope focused. Currency selector placed next to title instead of separate section.
+**Issues**: None.
+**Next**: Deploy to Vercel. Add RAPIDAPI_KEY environment variable in Vercel project settings.

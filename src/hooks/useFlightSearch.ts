@@ -3,20 +3,25 @@
 import { useState, useCallback } from "react";
 import { Flight, SearchParams } from "@/types";
 
+type Source = "skyscanner" | "unavailable" | "error";
+
 interface FlightSearchResult {
   flights: Flight[];
-  source: "skyscanner" | "mock";
+  source: Source;
+  message?: string;
 }
 
 export function useFlightSearch() {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [source, setSource] = useState<"skyscanner" | "mock" | null>(null);
+  const [source, setSource] = useState<Source | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const search = useCallback(async (params: SearchParams) => {
     setIsLoading(true);
     setHasSearched(true);
+    setMessage(null);
 
     try {
       const qs = new URLSearchParams({
@@ -33,13 +38,16 @@ export function useFlightSearch() {
       const data: FlightSearchResult = await res.json();
       setFlights(data.flights);
       setSource(data.source);
+      setMessage(data.message ?? null);
     } catch (error) {
       console.error("Search error:", error);
       setFlights([]);
+      setSource("error");
+      setMessage("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  return { flights, isLoading, hasSearched, source, search };
+  return { flights, isLoading, hasSearched, source, message, search };
 }

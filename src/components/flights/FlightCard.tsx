@@ -2,10 +2,13 @@
 
 import { Flight } from "@/types";
 import { Card, DataRow, Button } from "@/components/ui";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { FlipRow, PriceCounter } from "@/components/animations";
 
 interface FlightCardProps {
   flight: Flight;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
 function FlightSection({
@@ -48,14 +51,19 @@ function FlightSection({
   );
 }
 
-export function FlightCard({ flight }: FlightCardProps) {
+export function FlightCard({ flight, isFavorite = false, onToggleFavorite }: FlightCardProps) {
   return (
     <Card>
       <div className="flex flex-col gap-[48px]">
         <div>
-          <h2 className="text-accent text-[24px] font-light italic uppercase">
-            {flight.destination}
-          </h2>
+          <div className="flex justify-between items-start">
+            <h2 className="text-accent text-[24px] font-light italic uppercase">
+              {flight.destination}
+            </h2>
+            {onToggleFavorite && (
+              <FavoriteButton active={isFavorite} onToggle={onToggleFavorite} />
+            )}
+          </div>
           <p className="text-accent text-[12px] font-light italic mt-[8px]">
             {flight.description}
           </p>

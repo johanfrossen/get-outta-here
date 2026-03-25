@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchFlights } from "@/lib/skyscrapper";
-import { searchMockFlights } from "@/lib/mockData";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -18,26 +17,32 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const canUseApi = !!process.env.RAPIDAPI_KEY && !!fromSkyId && !!fromEntityId;
-
-  if (canUseApi) {
-    try {
-      const flights = await searchFlights(
-        fromSkyId,
-        fromEntityId,
-        departureDate,
-        returnDate,
-        currency,
-      );
-
-      if (flights.length > 0) {
-        return NextResponse.json({ flights, source: "skyscanner" });
-      }
-    } catch (error) {
-      console.error("Sky Scrapper API failed, falling back to mock:", error);
-    }
+  if (!process.env.RAPIDAPI_KEY) {
+    return NextResponse.json(
+      { flights: [], source: "unavailable", message: "Flight API not configured" },
+    );
   }
 
-  const flights = searchMockFlights(from);
-  return NextResponse.json({ flights, source: "mock" });
+  if (!fromSkyId || !fromEntityId) {
+    return NextResponse.json(
+      { flights: [], source: "unavailable", message: "Please select a departure airport from the suggestions" },
+    );
+  }
+
+  try {
+    const flights = await searchFlights(
+      fromSkyId,
+      fromEntityId,
+      departureDate,
+      returnDate,
+      currency,
+    );
+
+    return NextResponse.json({ flights, source: "skyscanner" });
+  } catch (error) {
+    console.error("Sky Scrapper API error:", error);
+    return NextResponse.json(
+      { flights: [], source: "error", message: "Flight search temporarily unavailable" },
+    );
+  }
 }
